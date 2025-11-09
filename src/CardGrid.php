@@ -12,6 +12,7 @@
 namespace Osynapsy\Bcl4\CardGrid;
 
 use Osynapsy\Html\Tag;
+use Osynapsy\Bcl4\Panel;
 
 /**
  * Description of Adressbook
