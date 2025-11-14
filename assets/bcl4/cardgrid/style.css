@@ -1,14 +1,16 @@
-/*
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
-*/
 /* 
-    Created on : 5-gen-2018, 9.37.57
-    Author     : Peter
+    Created on : 14-nov-2025, 9.37.57
+    Author     : Pietro Celeste <p.celeste@osynapsy.net>
 */
 
-/*OSY ADDRESSBOOK*/
+/*OSY CARDGRID*/
+div.osy-cardgrid {
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    background-color: white;
+} 
+
 div.osy-cardgrid div.osy-cardgrid-empty {
     text-align: center;
     margin-top: 75px;
@@ -57,19 +59,25 @@ div.osy-cardgrid .osy-cardgrid-item {
     height: 130px;
     font-size: 12px;
     margin: auto;
-    border: 1px solid silver;
+    text-decoration: none;
+    color: #555;    
+    border: 1px solid transparent;
     border-radius: 5px;
+}
+
+div.osy-cardgrid .addressbook
+{
+    border-color: silver;
     -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
     -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-    text-decoration: none;
-    color: #555;
 }
 
 div.osy-cardgrid .osy-cardgrid-item:hover {
     color: #337ab7;
-    border-color : #337ab7;
+    border-color: #337ab7;
     cursor: default;
+    background-color: #fdfdfd;
 }
 
 div.osy-cardgrid .osy-cardgrid-item:hover div.p2 {
@@ -88,6 +96,7 @@ div.osy-cardgrid .osy-cardgrid-item a.osy-cardgrid-link {
     bottom: 5px;
     right: 7px;
     border-radius: 3px;
+    border: 1px solid red;
     text-decoration: none;    
 }
 
