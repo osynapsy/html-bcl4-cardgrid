@@ -16,7 +16,7 @@ class CardGridCell extends Tag
     protected $rec;
 
 
-    public function __construct($tag = 'div', $id = null, $class = [])
+    public function __construct($tag = 'div', $id = null, array $class = [])
     {
         $class[] = 'osy-cardgrid-item';
         parent::__construct($tag, $id, implode(' ', $class));
