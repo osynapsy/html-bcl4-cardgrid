@@ -132,4 +132,10 @@ class CardGrid extends Panel
         $this->skin = [$skin];
         return $this;
     }
+
+    public function showBackground()
+    {
+        $this->addClass('osy-cardgrid-background-white');
+        return $this;
+    }
 }

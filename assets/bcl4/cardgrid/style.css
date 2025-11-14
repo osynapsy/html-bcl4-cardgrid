@@ -7,9 +7,14 @@
 div.osy-cardgrid {
     padding: 5px;
     border-radius: 5px;
+    
+} 
+
+div.osy-cardgrid-background-white
+{
     border: 1px solid #ddd;
     background-color: white;
-} 
+}
 
 div.osy-cardgrid div.osy-cardgrid-empty {
     text-align: center;
