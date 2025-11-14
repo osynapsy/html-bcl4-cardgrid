@@ -1,4 +1,13 @@
 <?php
+/*
+ * This file is part of the Osynapsy Bcl4 CartGrid package.
+ *
+ * (c) Pietro Celeste <p.celeste@osynapsy.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Osynapsy\Bcl4\CardGrid;
 
 use Osynapsy\Html\Tag;
@@ -9,40 +18,40 @@ use Osynapsy\Bcl4\Link;
  *
  * @author Pietro Celeste <p.celeste@osynapsy.net>
  */
-class CardGridBuilder 
+class CardGridBuilder
 {
     protected $grid;
     protected $foot;
     protected $itemSelected;
-    
+
     public function __construct(CardGrid $grid)
     {
         $this->grid = $grid;
     }
-    
+
     protected function getGrid()
     {
         return $this->grid;
     }
-    
+
     public function build()
     {
         $grid = $this->getGrid();
-        $dataset = $grid->getDataset();        
+        $dataset = $grid->getDataset();
         if ($grid->hasPaginator()) {
             $this->addToFoot(new Tag('div', null, 'pt-1 pl-2'))->add($grid->getPaginator())->setPosition('end');
         }
         if (empty($dataset)) {
-            $grid->addColumn(12)->add($this->emptyMessageFactory($grid->getEmptyMessage()));            
+            $grid->addColumn(12)->add($this->emptyMessageFactory($grid->getEmptyMessage()));
             return;
         }
         $this->itemSelected = empty($_REQUEST[$grid->id.'_chk']) ? [] : $_REQUEST[$grid->id.'_chk'];
         $this->bodyFactory($grid, $dataset);
         if ($this->foot) {
             $grid->addColumn(12)->add($this->foot);
-        }        
+        }
     }
-    
+
     public function addToFoot($content)
     {
         if (!$this->foot) {
@@ -51,7 +60,7 @@ class CardGridBuilder
         $this->foot->add($content);
         return $content;
     }
-    
+
     protected function emptyMessageFactory($emptyMessage)
     {
         return sprintf('<div class="osy-cardgrid-empty mt-5 mb-5"><span>%s</span></div>', $emptyMessage);
@@ -78,7 +87,7 @@ class CardGridBuilder
             ->setCellHeight($grid->getCellHeight())
             ->setCellFoot($grid->hasCellFoot());
     }
-    
+
     public function __toString()
     {
         return $this->build();
