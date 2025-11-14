@@ -22,7 +22,7 @@ class CardGrid extends Panel
 {
     protected $columns = 4;
     protected $foot;
-    protected $skin;
+    protected array $skin = [];
     protected $cellHeight;
     protected $emptyMessage;
     protected $itemSelected;
@@ -31,7 +31,7 @@ class CardGrid extends Panel
     protected $showPaginationPageInfo;
     protected $fields = [];
     protected $cellFoot = false;
-    
+
     public function __construct($id, $emptyMessage = 'Grid is empty', $columns = 4)
     {
         parent::__construct($id);
@@ -47,78 +47,78 @@ class CardGrid extends Panel
         (new CardGridBuilder($this))->build();
         parent::preBuild();
     }
-    
+
     public function addField($field, $type = 'string', callable $formatting = null)
     {
         $this->fields[$field] = ['type' => $type, 'formatting' => $formatting];
         return $this;
     }
-    
+
     public function enableCellFoot()
     {
         $this->cellFoot = true;
         return $this;
     }
-    
+
     public function getCellHeight()
     {
         return $this->cellHeight;
     }
-    
+
     public function getColumns()
     {
         return $this->columns;
     }
-    
+
     public function getDataset()
     {
-        if (empty($this->paginator)) {            
+        if (empty($this->paginator)) {
             return parent::getDataset();
         }
-        try {        
+        try {
             return $this->paginator->loadData(null, true);
         } catch (\Exception $e) {
             $this->emptyMessage = $e->getMessage();
         }
         return [];
     }
-    
+
     public function getEmptyMessage()
     {
         return $this->emptyMessage;
     }
-    
+
     public function getFields()
     {
         return $this->fields;
     }
-    
+
     public function getPaginator()
     {
         return $this->paginator;
     }
-    
+
     public function getSkin()
     {
         return $this->skin;
     }
-    
+
     public function hasCellFoot()
     {
         return $this->cellFoot;
     }
-    
+
     public function hasPaginator()
     {
         return !empty($this->paginator);
     }
-    
+
     public function setCellHeight($height)
     {
         $this->cellHeight = $height;
         return $this;
     }
-    
+
     public function setPaginator($paginator, $showPageDimension = true, $showPageInfo = true)
     {
         $this->paginator = $paginator;
@@ -127,10 +127,10 @@ class CardGrid extends Panel
         $this->showPaginationPageInfo = $showPageInfo;
         return $this->paginator;
     }
-    
+
     public function setSkin($skin)
     {
-        $this->skin = $skin;
+        $this->skin = [$skin];
         return $this;
-    }    
+    }
 }
