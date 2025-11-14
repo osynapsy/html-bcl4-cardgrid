@@ -3,7 +3,7 @@
     "version": "1.0",
     "homepage": "http://www.osynapsy.net/html-bcl4-cardgrid",
     "type": "library",
-    "description": "Osynapsy bs4 cardgrid implementation",
+    "description": "Transforms data collections into a responsive Bootstrap 4 card grid, offering a modern alternative to classic table-based data views.",
     "keywords": ["Osynapsy", "Cardgrid component"],
     "license": "MIT",
     "authors": [
