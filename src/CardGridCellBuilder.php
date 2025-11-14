@@ -93,7 +93,7 @@ class CardGridCellBuilder
 
     protected function linkFactory($href)
     {
-        return (new Link(false, $href, '', 'osy-cardgrid-link save-history fa fa-pencil'));
+        return (new Link(false, $href, '', 'osy-cardgrid-link fa fa-pencil save-history'));
     }
 
     protected function linkModalFactory($href)
