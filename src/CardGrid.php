@@ -11,7 +11,6 @@
 
 namespace Osynapsy\Bcl4\CardGrid;
 
-use Osynapsy\Html\Tag;
 use Osynapsy\Bcl4\Panel;
 
 /**
@@ -23,12 +22,16 @@ class CardGrid extends Panel
 {
     protected $columns = 4;
     protected $foot;
+    protected $skin;
+    protected $cellHeight;
     protected $emptyMessage;
     protected $itemSelected;
     protected $paginator;
     protected $showPaginationPageDimension;
     protected $showPaginationPageInfo;
-
+    protected $fields = [];
+    protected $cellFoot = false;
+    
     public function __construct($id, $emptyMessage = 'Grid is empty', $columns = 4)
     {
         parent::__construct($id);
@@ -41,104 +44,81 @@ class CardGrid extends Panel
 
     public function preBuild()
     {
-        if (!empty($this->paginator)) {
-            try {
-                $this->setDataset($this->paginator->loadData(null, true));
-                $this->addToFoot(new Tag('div', null, 'pt-1 pl-2'))->add($this->paginator)->setPosition('end');
-            } catch (\Exception $e) {
-                $this->emptyMessage = $e->getMessage();
-            }
-        }
-        if (empty($this->dataset)) {
-            $this->addColumn(12)->add($this->emptyMessageFactory($this->emptyMessage));
-            parent::preBuild();
-            return;
-        }
-        $this->itemSelected = empty($_REQUEST[$this->id.'_chk']) ? [] : $_REQUEST[$this->id.'_chk'];
-        $this->bodyFactory();
-        if ($this->foot) {
-            $this->addColumn(12)->add($this->foot);
-        }
+        (new CardGridBuilder($this))->build();
         parent::preBuild();
     }
-
-    protected function emptyMessageFactory($emptyMessage)
+    
+    public function addField($field, $type = 'string', callable $formatting = null)
     {
-        return sprintf('<div class="osy-cardgrid-empty mt-5 mb-5"><span>%s</span></div>', $emptyMessage);
+        $this->fields[$field] = ['type' => $type, 'formatting' => $formatting];
+        return $this;
     }
-
-    protected function bodyFactory()
+    
+    public function enableCellFoot()
     {
-        $columnLength = floor(12 / $this->columns);
-        foreach($this->dataset as $i => $rec) {
-            $column = $this->addColumn($columnLength)->setXs(6);
-            $a = $column->add(new Tag('div', null, 'osy-cardgrid-item'));
-            $p0 = $a->add(new Tag('div', null, 'p0'));
-            $p1 = $a->add(new Tag('div', null, 'p1'));
-            $p2 = $a->add(new Tag('div', null, 'p2'));
-            $p2->add('&nbsp;');
-            foreach($rec as $field => $value) {
-                if ($field[0] !== '_') {
-                    $this->cellFactory($field, $value, $a, $p0, $p1, $p2);
-                }
-            }
-            if (($i+1) % $this->columns === 0) {
-                $this->addRow();
-            }
+        $this->cellFoot = true;
+        return $this;
+    }
+    
+    public function getCellHeight()
+    {
+        return $this->cellHeight;
+    }
+    
+    public function getColumns()
+    {
+        return $this->columns;
+    }
+    
+    public function getDataset()
+    {
+        if (empty($this->paginator)) {            
+            return parent::getDataset();
         }
-    }
-
-    protected function cellFactory($k, $v, $a, $p0, $p1, $p2)
-    {
-        switch($k) {
-            case 'checkbox':
-                $checked = '';
-                if (!empty($this->itemSelected[$v])) {
-                    $a->addClass('osy-cardgrid-item-selected');
-                    $checked=' checked="checked"';
-                }
-                $a->add('<span class="fa fa-check"></span>');
-                $a->add('<input type="checkbox" name="'.$this->id.'_chk['.$v.']" value="'.$v.'"'.$checked.' class="osy-cardgrid-checkbox">');
-                break;
-            case 'href':
-                $a->add(new Tag('a', null, 'osy-cardgrid-link save-history fa fa-pencil'))
-                  ->attribute('href',$v);
-                break;
-            case 'hrefModal':
-                $a->add(new Tag('a', null, 'osy-cardgrid-link fa fa-pencil fa-pencil-alt open-modal'))
-                  ->attributes(['href' => $v, 'modal-width' => '640px', 'modal-height' => '480px']);
-                break;
-            case 'class':
-                $a->addClass($v);
-                break;
-            case 'img':
-                if (!empty($v)) {
-                    $v = '<img src="'.$v.'" class="osy-cardgrid-img">';
-                } else {
-                    $v = '<span class="fa fa-user fa-2x osy-cardgrid-img text-center" style="padding-top: 3px"></span>';
-                }
-                $p0->add($v);
-                break;
-            case 'tag':
-                $p2->add('<span>'.$v.'</span><br>');
-                break;
-            case 'title':
-                $v = '<strong>'.$v.'</strong>';
-            default:
-                $p1->add('<div class="p1-row">'.$v.'</div>');
-                break;
+        try {        
+            return $this->paginator->loadData(null, true);
+        } catch (\Exception $e) {
+            $this->emptyMessage = $e->getMessage();
         }
+        return [];
     }
-
-    public function addToFoot($content)
+    
+    public function getEmptyMessage()
     {
-        if (!$this->foot) {
-            $this->foot = new Tag('div', null, 'd-flex justify-content-end mt1');
-        }
-        $this->foot->add($content);
-        return $content;
+        return $this->emptyMessage;
     }
-
+    
+    public function getFields()
+    {
+        return $this->fields;
+    }
+    
+    public function getPaginator()
+    {
+        return $this->paginator;
+    }
+    
+    public function getSkin()
+    {
+        return $this->skin;
+    }
+    
+    public function hasCellFoot()
+    {
+        return $this->cellFoot;
+    }
+    
+    public function hasPaginator()
+    {
+        return !empty($this->paginator);
+    }
+    
+    public function setCellHeight($height)
+    {
+        $this->cellHeight = $height;
+        return $this;
+    }
+    
     public function setPaginator($paginator, $showPageDimension = true, $showPageInfo = true)
     {
         $this->paginator = $paginator;
@@ -147,4 +127,10 @@ class CardGrid extends Panel
         $this->showPaginationPageInfo = $showPageInfo;
         return $this->paginator;
     }
+    
+    public function setSkin($skin)
+    {
+        $this->skin = $skin;
+        return $this;
+    }    
 }
